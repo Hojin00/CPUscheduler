@@ -4,13 +4,21 @@ import java.util.ArrayList;
 
 public class SO {
   public String[] memory;
+  public String[] copyMemory;
   public ArrayList<Process> allProcs = new ArrayList<Process>();
+  public boolean readProcs = true;
   Scanner in = new Scanner(System.in);
+  private int quantum = 0;
+  private int priority = 0;
+  private int id = 0;
+  ReaderProcs rp = new ReaderProcs();
+  Scheduler sm;
 
   private void execute() {
-
-    System.out.print("Digite 1 para priority e 2 para round robin :)");
+    System.out.println("Selecione a politica de escalonamento ");
+    System.out.println("Digite 1 para priority e 2 para round robin");
     int nAlgoritmo = in.nextInt();
+
     // 1: priority
     // 2: round-robin
     int quantum;
@@ -18,33 +26,50 @@ public class SO {
       System.out.print("quanto q eh o quantum? ");
       quantum = in.nextInt();
     }
-      
-    // receber input do usuario :)
-    
+
     String schedulerType;
-    if (nAlgoritmo == 1):
+    if (nAlgoritmo == 1) {
       schedulerType = "Priority";
-    else:
+
+    } else {
       schedulerType = "Round-Robin";
-      
-    readAllProcs();
-    
-    CPU cpu = new CPU(allProcs, schedulerType, quantum);
-  }
+    }
 
-  private void readAllProcs(String filename) {
-
-    System.out.println("qual e o prioridade deste processo? ");
-    // 1: baixa
-    // 2: media
-    // 3: alta
-    Process p = new Process();
-    allProcs.add(p);
+    // montar processos
+    while (readProcs) {
+      readAllProcs();
+    }
 
   }
 
-  public abstract void keepTrackOfState(Process p);
+  private void readAllProcs() {
 
+    System.out.println("digite o nome do arquivo do processo? se n tiver mais processos digite S");
+    String procPath = in.nextLine();
+    rp.readProcess(procPath, memory);
+
+    if (procPath.equals("S")) {
+      readProcs = false;
+    } else {
+      // Bufferreader ou Scanner para achar o txt(processo)
+      System.out.println("digite arrival time do processo");
+      int at = in.nextInt();
+
+      System.out.println("qual e o prioridade do processo? ");
+      priority = in.nextInt();
+      // 1: baixa
+      // 2: media
+      // 3: alta
+
+      Process proc = new Process(id, priority, at);
+
+      allProcs.add(proc);
+      id++;
+    }
+
+  }
+
+  public abstract void keepTrackOfState(Process p);return p.getState();
 }
 
 // allProc: [Process]
@@ -58,3 +83,31 @@ public class SO {
 // instancia processos
 // instancia scheduler
 // sm.start()
+
+So
+
+// tem controle em todas as listas de todos os estados
+// alocacao de memoria
+// cria pcb do processo
+// tem funcao gerenciaProcesso()
+// quando aquele processo efetivamente vai ser liberado
+// SO lança o processo pro estado de ready olhando o arrivaltime
+CPU Scheduler-round-robin tambem
+considera prioridade
+
+problema de
+algums processos
+com alta
+prioridade continuam
+ocupando a
+lista de ready-
+processos com
+media prioridade
+sempre ficam
+na lista
+de suspend, pq
+alta prirodiade
+sempre ganham
+espaco de
+lista de
+ready

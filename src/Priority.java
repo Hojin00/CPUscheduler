@@ -20,7 +20,7 @@ public class Priority extends Scheduler {
         aux.add(processes.get(i));
         continue;
       }
-      for (int j = i; j < processes.size() - 1; j++) {
+      for (int j = 0; j < processes.size() - 1; j++) {
         if (processes.get(i).getPriority() > aux.get(j).getPriority()) {
           aux.add(j, processes.get(i));
         }
@@ -43,7 +43,6 @@ public class Priority extends Scheduler {
 
   @Override
   public void removeProcess(int p) {
-    // TODO Auto-generated method stub
 
   }
 

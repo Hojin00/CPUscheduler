@@ -1,10 +1,21 @@
+import java.util.ArrayList;
 
 public class CPU {
   private Scheduler sm; // prioridade com preempcao ou nao ou round robin
+  private ArrayList<Process> allProcs = new ArrayList<>();
+  private ArrayList<Process> procsWithAT = new ArrayList<>();
+  private ArrayList<Process> readyProcs = new ArrayList<>();
 
-  CPU(Process p, String schedulerType, int q) {
-    sm = setScheduler(schedulerType, q);
+  private Process activeProc = null;
+
+  CPU(ArrayList<Process> process, String schedulerType, int quantum) {
+    sm = setScheduler(schedulerType, quantum);
     sm.setScheduler(sm);
+    activeProc = null;
+    
+    for(p)
+      Processo p = new Process(pid, pc, acc, arrivalTime, priority);
+      allProcs.add(p);
   }
 
   // sm.setScheduler() -> define o tipo de scheduler
@@ -29,9 +40,9 @@ public class CPU {
 
   // setScheduler
 
-  public static Scheduler setScheduler(String type, int q) {
+  public static Scheduler setScheduler(Scheduler s, int q) {
 
-    switch (type) {
+    switch (s) {
       case "Priority":
         return new Priority();
       case "Round-Robin":

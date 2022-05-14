@@ -54,7 +54,7 @@ public class Round_Robin extends Scheduler {
   @Override
   public void setScheduler(Scheduler sm) {
     // TODO Auto-generated method stub
-    If(n == 1)
+    sm.addProcess(p);
   }
 
 }

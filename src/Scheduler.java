@@ -4,7 +4,7 @@ public abstract class Scheduler {
 
   public abstract void removeProcess(int p);
 
-  public abstract void setScheduler(Scheduler sm);
+  public abstract void setScheduler(Scheduler sm, int q);
 
   public abstract void printArrivalTimes();
 
