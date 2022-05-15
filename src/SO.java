@@ -49,11 +49,11 @@ public class SO {
       }
 
       if (sm.readyProcesses.size() >= 1) {
-        sm.readyToRunning(); // tem q implementar
+        sm.readyToRunning(cicloAtual); // tem q implementar
       }
 
       if (sm.blockProcesses.size() >= 1) {
-        sm.runningToBlock(); // tem q implementar
+        sm.runningToBlocked(cicloAtual); // tem q implementar
       }
 
       this.cicloAtual++;

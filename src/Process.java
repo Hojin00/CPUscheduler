@@ -5,7 +5,9 @@ public class Process {
   private String state;
   private int priority = 0;
   private int arrivalTime = 0;
-  public int tempoDeExecucaoAtual = 0; // qnt ciclo de unidade de execucao passou ate agora
+  public int startExecutingTime = 0;
+  public int stopExecutingTime = 0;
+  public int tempoDeExecucaoTotal = 0; // qnt ciclo de unidade total de execucao passou ate agora
   // public int unidadeDoTempo = 0;
 
   private boolean isActive = false;
@@ -22,12 +24,16 @@ public class Process {
     this.priority = priority;
   }
 
-  public double getArrivalTime() {
-    return arrivalTime;
+  public int getPID() {
+    return pid;
   }
 
-  public int getPriority() {
-    return priority;
+  public int getPc() {
+    return pc;
+  }
+
+  public int getAcc() {
+    return acc;
   }
 
   public String getState() {
@@ -44,6 +50,14 @@ public class Process {
 
   public void setState(String state) {
     this.state = state;
+  }
+
+  public double getArrivalTime() {
+    return arrivalTime;
+  }
+
+  public int getPriority() {
+    return priority;
   }
 
   // executing()

@@ -11,6 +11,8 @@ public abstract class Scheduler {
 
   public abstract void newToReady(int cicloAtual);
 
+  public abstract void readyToRunning(int cicloAtual);
+
   public abstract void runningToBlocked(int cicloAtual);
 
   public abstract void addProcess(Process p);

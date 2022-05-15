@@ -10,6 +10,7 @@ public class Priority extends Scheduler {
   public ArrayList<Process> blockProcesses = new ArrayList<Process>();
   public ArrayList<Process> finishProcesses = new ArrayList<Process>();
   public Process currProc;
+  public CPU cpu = new CPU();
 
   @Override
   public void newToReady(int cicloAtual) {
@@ -23,12 +24,22 @@ public class Priority extends Scheduler {
   }
 
   @Override
+  public void readyToRunning(int cicloAtual) {
+    sortReadyList();
+    currProc = readyProcesses.get(0);
+    currProc.startExecutingTime = cicloAtual;
+    cpu.setProcessinProcessor(currProc); // currProc vai usar cpu
+    currProc.setState("Running");
+  }
+
+  @Override
   public void runningToBlocked(int cicloAtual) {
-    // TODO Auto-generated method stub
+    currProc.stopExecutingTime = cicloAtual;
+    currProc.tempoDeExecucaoTotal += currProc.stopExecutingTime - currProc.startExecutingTime;
+    currProc.setPc(cpu.getPc());
+    currProc.setAcc(cpu.getAcc());
     currProc.setState("Blocked");
-    currProc.tempoDeExecucaoAtual = cicloAtual;
-    currProc.pc = CPU.pc;
-    currProc.acc = CPU.acc;
+    blockProcesses.add(currProc);
   }
 
   @Override

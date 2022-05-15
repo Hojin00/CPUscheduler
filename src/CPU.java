@@ -2,17 +2,14 @@ import java.util.ArrayList;
 
 public class CPU {
   private Scheduler sm; // prioridade com preempcao ou nao ou round robin
-  private ArrayList<Process> allProcs = new ArrayList<>();
-  private ArrayList<Process> procsWithAT = new ArrayList<>();
-  private ArrayList<Process> readyProcs = new ArrayList<>();
+  private int pc;
+  private int acc;
+  public Process activeProc;
 
-  private Process activeProc = null;
-
-  // CPU(ArrayList<Process> process, String schedulerType, int quantum) {
-  // sm = setScheduler(schedulerType, quantum);
-  // sm.setScheduler(sm);
-  // activeProc = null;
-
+  public void setProcessinProcessor(Process activeProc) {
+    this.pc = activeProc.getPc();
+    this.acc = activeProc.getAcc();
+  }
   // for(p)
   // Processo p = new Process(pid, pc, acc, arrivalTime, priority);
   // allProcs.add(p);
@@ -49,6 +46,14 @@ public class CPU {
         return new Round_Robin(q);
     }
     return null;
+  }
+
+  public int getPc() {
+    return pc;
+  }
+
+  public int getAcc() {
+    return acc;
   }
 
 }
