@@ -13,8 +13,10 @@ public class SO {
   private int id = 0;
   ReaderProcs rp = new ReaderProcs();
   Scheduler sm;
+  private int cicloAtual = 0;
+  // maximumTime = 10;
 
-  private void execute() {
+  void execute() {
     System.out.println("Selecione a politica de escalonamento ");
     System.out.println("Digite 1 para priority e 2 para round robin");
     int nAlgoritmo = in.nextInt();
@@ -25,14 +27,13 @@ public class SO {
     if (nAlgoritmo == 2) {
       System.out.print("quanto q eh o quantum? ");
       quantum = in.nextInt();
+      // maximum = quantum * 2;
     }
 
-    String schedulerType;
     if (nAlgoritmo == 1) {
-      schedulerType = "Priority";
-
+      sm = new Priority();
     } else {
-      schedulerType = "Round-Robin";
+      sm = new Round_Robin(quantum);
     }
 
     // montar processos
@@ -40,6 +41,31 @@ public class SO {
       readAllProcs();
     }
 
+    sendProcsToScheduler();
+
+    while (sm.newProcesses.size() >= 1 || sm.blockProcesses.size() >= 1 || sm.readyProcesses.size() >= 1) {
+      if (sm.newProcesses.size() >= 1) {
+        sm.newToReady(cicloAtual);
+      }
+
+      if (sm.readyProcesses.size() >= 1) {
+        sm.readyToRunning(); // tem q implementar
+      }
+
+      if (sm.blockProcesses.size() >= 1) {
+        sm.runningToBlock(); // tem q implementar
+      }
+
+      this.cicloAtual++;
+
+    }
+
+  }
+
+  private void sendProcsToScheduler() {
+    for (int i = 0; i < allProcs.size(); i++) {
+      sm.addProcess(allProcs.get(i));
+    }
   }
 
   private void readAllProcs() {
@@ -69,8 +95,8 @@ public class SO {
 
   }
 
-  public abstract void keepTrackOfState(Process p);return p.getState();
 }
+// public abstract void keepTrackOfState(Process p);return p.getState();
 
 // allProc: [Process]
 // memoria: [String]
@@ -84,30 +110,30 @@ public class SO {
 // instancia scheduler
 // sm.start()
 
-So
+// So
 
-// tem controle em todas as listas de todos os estados
-// alocacao de memoria
-// cria pcb do processo
-// tem funcao gerenciaProcesso()
-// quando aquele processo efetivamente vai ser liberado
-// SO lança o processo pro estado de ready olhando o arrivaltime
-CPU Scheduler-round-robin tambem
-considera prioridade
+// // tem controle em todas as listas de todos os estados
+// // alocacao de memoria
+// // cria pcb do processo
+// // tem funcao gerenciaProcesso()
+// // quando aquele processo efetivamente vai ser liberado
+// // SO lança o processo pro estado de ready olhando o arrivaltime
+// CPU Scheduler-round-robin tambem
+// considera prioridade
 
-problema de
-algums processos
-com alta
-prioridade continuam
-ocupando a
-lista de ready-
-processos com
-media prioridade
-sempre ficam
-na lista
-de suspend, pq
-alta prirodiade
-sempre ganham
-espaco de
-lista de
-ready
+// problema de
+// algums processos
+// com alta
+// prioridade continuam
+// ocupando a
+// lista de ready-
+// processos com
+// media prioridade
+// sempre ficam
+// na lista
+// de suspend, pq
+// alta prirodiade
+// sempre ganham
+// espaco de
+// lista de
+// ready

@@ -5,13 +5,14 @@ import java.util.PriorityQueue;
 
 public class Round_Robin extends Scheduler {
 
-  private double quantum;
-  ArrayList<Process> newProcesses;
-  PriorityQueue<Process> readyProcesses;
-  ArrayList<Process> blockProcesses;
-  ArrayList<Process> finishProcesses;
-  private ArrayList<Process> rrList;
-  private int currProc;
+  public double quantum;
+  public ArrayList<Process> allProcesses = new ArrayList<Process>();
+  public ArrayList<Process> newProcesses = new ArrayList<Process>();
+  public PriorityQueue<Process> readyProcesses;
+  public ArrayList<Process> blockProcesses = new ArrayList<Process>();
+  public ArrayList<Process> finishProcesses = new ArrayList<Process>();
+  public ArrayList<Process> rrList;
+  public Process currProc;
 
   Round_Robin(double q) {
     readyProcesses = new PriorityQueue<Process>(new Comparator<Process>() {
@@ -29,8 +30,27 @@ public class Round_Robin extends Scheduler {
   }
 
   @Override
+  public void newToReady(int cicloAtual) {
+    for (int i = 0; i < newProcesses.size(); i++) {
+      if (cicloAtual == newProcesses.get(i).getArrivalTime()) {
+        readyProcesses.add(newProcesses.get(i));
+        newProcesses.remove(i);
+      }
+    }
+  }
+
+  @Override
+  public void runningToBlocked(int cicloAtual) {
+    // TODO Auto-generated method stub
+    currProc.setState("Blocked");
+    currProc.tempoDeExecucaoAtual = cicloAtual;
+    currProc.pc = CPU.pc;
+    currProc.acc = CPU.acc;
+  }
+
+  @Override
   public void addProcess(Process p) {
-    newProcesses.add(p);
+    allProcesses.add(p);
   }
 
   @Override
@@ -45,16 +65,10 @@ public class Round_Robin extends Scheduler {
     // while (itr.hasNext()) {
     // System.out.println(((Process) itr).getArrivalTime());
     // }
-    for (Process p : readyProcesses) {
+    for (Process p : allProcesses) {
       System.out.println(p.getArrivalTime());
     }
 
-  }
-
-  @Override
-  public void setScheduler(Scheduler sm) {
-    // TODO Auto-generated method stub
-    sm.addProcess(p);
   }
 
 }

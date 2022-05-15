@@ -8,15 +8,15 @@ public class CPU {
 
   private Process activeProc = null;
 
-  CPU(ArrayList<Process> process, String schedulerType, int quantum) {
-    sm = setScheduler(schedulerType, quantum);
-    sm.setScheduler(sm);
-    activeProc = null;
-    
-    for(p)
-      Processo p = new Process(pid, pc, acc, arrivalTime, priority);
-      allProcs.add(p);
-  }
+  // CPU(ArrayList<Process> process, String schedulerType, int quantum) {
+  // sm = setScheduler(schedulerType, quantum);
+  // sm.setScheduler(sm);
+  // activeProc = null;
+
+  // for(p)
+  // Processo p = new Process(pid, pc, acc, arrivalTime, priority);
+  // allProcs.add(p);
+  // }
 
   // sm.setScheduler() -> define o tipo de scheduler
 
@@ -40,7 +40,7 @@ public class CPU {
 
   // setScheduler
 
-  public static Scheduler setScheduler(Scheduler s, int q) {
+  public static Scheduler setScheduler(String s, int q) {
 
     switch (s) {
       case "Priority":
