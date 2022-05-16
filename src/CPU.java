@@ -9,6 +9,7 @@ public class CPU {
   public void setProcessinProcessor(Process activeProc) {
     this.pc = activeProc.getPc();
     this.acc = activeProc.getAcc();
+    this.activeProc = activeProc;
   }
   // for(p)
   // Processo p = new Process(pid, pc, acc, arrivalTime, priority);

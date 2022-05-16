@@ -12,18 +12,18 @@ public class SO {
   private int priority = 0;
   private int id = 0;
   ReaderProcs rp = new ReaderProcs();
-  Scheduler sm;
+  Priority sm;
   private int cicloAtual = 0;
+
   // maximumTime = 10;
 
   void execute() {
     System.out.println("Selecione a politica de escalonamento ");
-    System.out.println("Digite 1 para priority e 2 para round robin");
+    System.out.println("Digite 1 para priority e 2 para round robin\n");
     int nAlgoritmo = in.nextInt();
 
     // 1: priority
     // 2: round-robin
-    int quantum;
     if (nAlgoritmo == 2) {
       System.out.print("quanto q eh o quantum? ");
       quantum = in.nextInt();
@@ -32,23 +32,38 @@ public class SO {
 
     if (nAlgoritmo == 1) {
       sm = new Priority();
-    } else {
-      sm = new Round_Robin(quantum);
     }
 
     // montar processos
-    while (readProcs) {
-      readAllProcs();
-    }
+    // while (readProcs) {
+    // readAllProcs();
+    // }
+
+    Process mockproc1 = new Process(1, 1, 0, 4);
+    Process mockproc2 = new Process(2, 2, 0, 3);
+    Process mockproc3 = new Process(3, 1, 6, 7);
+    Process mockproc4 = new Process(4, 3, 11, 4);
+    Process mockproc5 = new Process(5, 2, 12, 2);
+
+    allProcs.add(mockproc1);
+    allProcs.add(mockproc2);
+    allProcs.add(mockproc3);
+    allProcs.add(mockproc4);
+    allProcs.add(mockproc5);
 
     sendProcsToScheduler();
 
-    while (sm.newProcesses.size() >= 1 || sm.blockProcesses.size() >= 1 || sm.readyProcesses.size() >= 1) {
+    while (this.sm.newProcesses.size() >= 1 || this.sm.blockProcesses.size() >= 1
+        || this.sm.readyProcesses.size() >= 1) {
+      if (sm.currProc != null) {
+        sm.runningToExitOrReady(cicloAtual); // tem q implementar
+      }
+
       if (sm.newProcesses.size() >= 1) {
         sm.newToReady(cicloAtual);
       }
 
-      if (sm.readyProcesses.size() >= 1) {
+      if (sm.readyProcesses.size() >= 1 && sm.currProc == null) {
         sm.readyToRunning(cicloAtual); // tem q implementar
       }
 
@@ -57,22 +72,23 @@ public class SO {
       }
 
       this.cicloAtual++;
+      this.sm.currProc.tempoDeExecucaoTotal++;
 
     }
-
   }
 
   private void sendProcsToScheduler() {
     for (int i = 0; i < allProcs.size(); i++) {
-      sm.addProcess(allProcs.get(i));
+      sm.newProcesses.add(allProcs.get(i));
     }
+    System.out.println(" size " + this.sm.newProcesses.size());
   }
 
   private void readAllProcs() {
 
     System.out.println("digite o nome do arquivo do processo? se n tiver mais processos digite S");
     String procPath = in.nextLine();
-    rp.readProcess(procPath, memory);
+    // rp.readFile(filename, proc, memory, posicaoMemoria);
 
     if (procPath.equals("S")) {
       readProcs = false;
@@ -87,9 +103,9 @@ public class SO {
       // 2: media
       // 3: alta
 
-      Process proc = new Process(id, priority, at);
+      // Process proc = new Process(id, priority, at);
 
-      allProcs.add(proc);
+      // allProcs.add(proc);
       id++;
     }
 

@@ -11,14 +11,24 @@ public class Priority extends Scheduler {
   public ArrayList<Process> finishProcesses = new ArrayList<Process>();
   public Process currProc;
   public CPU cpu = new CPU();
+  public int timeout = 3;
 
   @Override
   public void newToReady(int cicloAtual) {
-    for (int i = 0; i < newProcesses.size(); i++) {
-      if (cicloAtual == newProcesses.get(i).getArrivalTime()) {
-        readyProcesses.add(newProcesses.get(i));
-        newProcesses.get(i).setState("Ready");
-        newProcesses.remove(i);
+    int cont = 0;
+    while (newProcesses.size() >= 1) {
+      if (cont == newProcesses.size()) {
+        break;
+      }
+      if (cicloAtual == newProcesses.get(cont).getArrivalTime()) {
+        readyProcesses.add(newProcesses.get(cont));
+        newProcesses.get(cont).setState("Ready");
+        System.out.println("ID." + newProcesses.get(cont).getPID() +
+            " entrou no ready : " + " ciclo atual ---> " + cicloAtual);
+        cont = 0;
+        newProcesses.remove(cont);
+      } else {
+        cont++;
       }
     }
   }
@@ -30,6 +40,8 @@ public class Priority extends Scheduler {
     currProc.startExecutingTime = cicloAtual;
     cpu.setProcessinProcessor(currProc); // currProc vai usar cpu
     currProc.setState("Running");
+    readyProcesses.remove(0);
+    System.out.println("ID." + currProc.getPID() + " entrou no running :" + " ciclo atual ---> " + cicloAtual);
   }
 
   @Override
@@ -39,13 +51,38 @@ public class Priority extends Scheduler {
     currProc.setPc(cpu.getPc());
     currProc.setAcc(cpu.getAcc());
     currProc.setState("Blocked");
+    System.out.println(
+        "ID." + currProc.getPID() + " entrou no blocked :" + " ultimo ciclo ---> " + cicloAtual);
     blockProcesses.add(currProc);
+    currProc = null;
+  }
+
+  @Override
+  public void runningToExitOrReady(int cicloAtual) {
+    // TODO Auto-generated method stub
+    if ((currProc.processTime - currProc.tempoRestante == timeout)
+        && (currProc.tempoDeExecucaoTotal < currProc.processTime)) {
+      currProc.tempoRestante -= currProc.stopExecutingTime - currProc.startExecutingTime;
+      readyProcesses.add(currProc);
+      currProc = null;
+
+    } else if (currProc.tempoDeExecucaoTotal == currProc.processTime) {
+      System.out.println("ID." + currProc.getPID() + " entrou no exit :" + " ciclo inicial ---> "
+          + currProc.startExecutingTime + " ciclo final ---> " + cicloAtual);
+      finishProcesses.add(currProc);
+      currProc.setPc(cpu.getPc());
+      currProc.setAcc(cpu.getAcc());
+      currProc = null;
+
+    } else {
+      currProc.tempoRestante--;
+    }
   }
 
   @Override
   public void addProcess(Process p) {
     // TODO Auto-generated method stub
-    allProcesses.add(p);
+    newProcesses.add(p);
   }
 
   // public void organizeProcesses() {
