@@ -9,10 +9,10 @@ public class SO {
   public boolean readProcs = true;
   Scanner in = new Scanner(System.in);
   private int quantum = 0;
-  private int priority = 0;
   private int id = 0;
   ReaderProcs rp = new ReaderProcs();
-  Priority sm;
+  Priority priority;
+  Round_Robin rr;
   private int cicloAtual = 0;
 
   // maximumTime = 10;
@@ -31,7 +31,9 @@ public class SO {
     }
 
     if (nAlgoritmo == 1) {
-      sm = new Priority();
+      priority = new Priority();
+    } else {
+      rr = new Round_Robin(quantum);
     }
 
     // montar processos
@@ -51,37 +53,81 @@ public class SO {
     allProcs.add(mockproc4);
     allProcs.add(mockproc5);
 
-    sendProcsToScheduler();
+    if (nAlgoritmo == 1) {
+      priority = new Priority();
 
-    while (this.sm.newProcesses.size() >= 1 || this.sm.blockProcesses.size() >= 1
-        || this.sm.readyProcesses.size() >= 1) {
-      if (sm.currProc != null) {
-        sm.runningToExitOrReady(cicloAtual); // tem q implementar
+      sendProcsTopPriority();
+
+      while (this.priority.newProcesses.size() >= 1 || this.priority.blockProcesses.size() >= 1
+          || this.priority.readyProcesses.size() >= 1 || this.priority.currProc != null) {
+        if (priority.currProc != null) {
+          priority.runningToExitOrReady(cicloAtual); // tem q implementar
+        }
+
+        if (priority.newProcesses.size() >= 1) {
+          priority.newToReady(cicloAtual);
+        }
+
+        if (priority.readyProcesses.size() >= 1 && priority.currProc == null) {
+          priority.readyToRunning(cicloAtual); // tem q implementar
+        }
+
+        if (priority.blockProcesses.size() >= 1) {
+          priority.runningToBlocked(cicloAtual); // tem q implementar
+        }
+
+        this.cicloAtual++;
+        if (priority.currProc != null) {
+          this.priority.currProc.tempoDeExecucaoTotal++;
+          this.priority.currProc.tempoRestante++;
+        }
       }
+    } else {
+      rr = new Round_Robin(quantum);
 
-      if (sm.newProcesses.size() >= 1) {
-        sm.newToReady(cicloAtual);
+      sendProcsTopRR();
+
+      while (this.rr.newProcesses.size() >= 1 || this.rr.blockProcesses.size() >= 1
+          || this.rr.readyProcesses.size() >= 1 || this.rr.currProc != null) {
+        if (rr.currProc != null) {
+          rr.runningToExitOrReady(cicloAtual); // tem q implementar
+        }
+
+        if (rr.newProcesses.size() >= 1) {
+          rr.newToReady(cicloAtual);
+        }
+
+        if (rr.readyProcesses.size() >= 1 && rr.currProc == null) {
+          rr.readyToRunning(cicloAtual); // tem q implementar
+        }
+
+        if (rr.blockProcesses.size() >= 1) {
+          rr.runningToBlocked(cicloAtual); // tem q implementar
+        }
+
+        this.cicloAtual++;
+        if (rr.currProc != null) {
+          this.rr.currProc.tempoDeExecucaoTotal++;
+          this.rr.currProc.tempoRestante++;
+        }
       }
-
-      if (sm.readyProcesses.size() >= 1 && sm.currProc == null) {
-        sm.readyToRunning(cicloAtual); // tem q implementar
-      }
-
-      if (sm.blockProcesses.size() >= 1) {
-        sm.runningToBlocked(cicloAtual); // tem q implementar
-      }
-
-      this.cicloAtual++;
-      this.sm.currProc.tempoDeExecucaoTotal++;
 
     }
+
   }
 
-  private void sendProcsToScheduler() {
+  private void sendProcsTopPriority() {
     for (int i = 0; i < allProcs.size(); i++) {
-      sm.newProcesses.add(allProcs.get(i));
+      priority.newProcesses.add(allProcs.get(i));
     }
-    System.out.println(" size " + this.sm.newProcesses.size());
+    System.out.println(" size " + this.priority.newProcesses.size());
+  }
+
+  private void sendProcsTopRR() {
+    for (int i = 0; i < allProcs.size(); i++) {
+      rr.newProcesses.add(allProcs.get(i));
+    }
+    System.out.println(" size " + this.rr.newProcesses.size());
   }
 
   private void readAllProcs() {
@@ -98,7 +144,7 @@ public class SO {
       int at = in.nextInt();
 
       System.out.println("qual e o prioridade do processo? ");
-      priority = in.nextInt();
+      // priority = in.nextInt();
       // 1: baixa
       // 2: media
       // 3: alta

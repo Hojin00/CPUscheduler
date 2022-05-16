@@ -11,7 +11,7 @@ public class Priority extends Scheduler {
   public ArrayList<Process> finishProcesses = new ArrayList<Process>();
   public Process currProc;
   public CPU cpu = new CPU();
-  public int timeout = 3;
+  public int timeout = 15;
 
   @Override
   public void newToReady(int cicloAtual) {
@@ -23,7 +23,7 @@ public class Priority extends Scheduler {
       if (cicloAtual == newProcesses.get(cont).getArrivalTime()) {
         readyProcesses.add(newProcesses.get(cont));
         newProcesses.get(cont).setState("Ready");
-        System.out.println("ID." + newProcesses.get(cont).getPID() +
+        System.out.println("[ID." + newProcesses.get(cont).getPID() + "]" +
             " entrou no ready : " + " ciclo atual ---> " + cicloAtual);
         cont = 0;
         newProcesses.remove(cont);
@@ -41,7 +41,7 @@ public class Priority extends Scheduler {
     cpu.setProcessinProcessor(currProc); // currProc vai usar cpu
     currProc.setState("Running");
     readyProcesses.remove(0);
-    System.out.println("ID." + currProc.getPID() + " entrou no running :" + " ciclo atual ---> " + cicloAtual);
+    System.out.println("[ID." + currProc.getPID() + "]" + " entrou no running :" + " ciclo atual ---> " + cicloAtual);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class Priority extends Scheduler {
     currProc.setAcc(cpu.getAcc());
     currProc.setState("Blocked");
     System.out.println(
-        "ID." + currProc.getPID() + " entrou no blocked :" + " ultimo ciclo ---> " + cicloAtual);
+        "[ID." + currProc.getPID() + "]" + " entrou no blocked :" + " ultimo ciclo ---> " + cicloAtual);
     blockProcesses.add(currProc);
     currProc = null;
   }
@@ -60,22 +60,24 @@ public class Priority extends Scheduler {
   @Override
   public void runningToExitOrReady(int cicloAtual) {
     // TODO Auto-generated method stub
-    if ((currProc.processTime - currProc.tempoRestante == timeout)
+    if (((currProc.tempoRestante % timeout == 0))
         && (currProc.tempoDeExecucaoTotal < currProc.processTime)) {
-      currProc.tempoRestante -= currProc.stopExecutingTime - currProc.startExecutingTime;
+      currProc.stopExecutingTime = cicloAtual;
+      System.out.println("[ID." + currProc.getPID() + "]" + " saiu e entrou no ready :" + " ciclo atual ---> "
+          + currProc.stopExecutingTime);
       readyProcesses.add(currProc);
       currProc = null;
 
-    } else if (currProc.tempoDeExecucaoTotal == currProc.processTime) {
-      System.out.println("ID." + currProc.getPID() + " entrou no exit :" + " ciclo inicial ---> "
-          + currProc.startExecutingTime + " ciclo final ---> " + cicloAtual);
-      finishProcesses.add(currProc);
-      currProc.setPc(cpu.getPc());
-      currProc.setAcc(cpu.getAcc());
-      currProc = null;
-
     } else {
-      currProc.tempoRestante--;
+      if (currProc.tempoDeExecucaoTotal == currProc.processTime) {
+        System.out.println("[ID." + currProc.getPID() + "]" + " entrou no exit :" + " ciclo inicial ---> "
+            + currProc.startExecutingTime + " ciclo final ---> " + cicloAtual);
+        finishProcesses.add(currProc);
+        currProc.setPc(cpu.getPc());
+        currProc.setAcc(cpu.getAcc());
+        currProc = null;
+
+      }
     }
   }
 

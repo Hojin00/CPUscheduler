@@ -23,7 +23,6 @@ public class Process {
     this.acc = 0;
     this.state = "New";
     this.processTime = processTime;
-    this.tempoRestante = this.processTime;
     this.arrivalTime = arrivalTime;
     this.priority = priority;
   }
