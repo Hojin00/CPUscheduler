@@ -11,7 +11,8 @@ public class Process {
   public int tempoRestante = 0; // 1
   public int tempoDeExecucaoTotal = 0; // 3 // qnt ciclo de unidade total de execucao passou ate agora
   // public int unidadeDoTempo = 0;
-
+  public int wt = 0;
+  public int enterReady = 0;
   private int programStart;
   private int programEnd;
   private int varStart;

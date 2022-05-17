@@ -82,6 +82,9 @@ public class SO {
           this.priority.currProc.tempoRestante++;
         }
       }
+      for(int i = 0; i < priority.finishProcesses.size(); i++) {
+        System.out.println("PID: " + priority.finishProcesses.get(i).getPID() + "-" + "Processing Time: " + priority.finishProcesses.get(i).tempoDeExecucaoTotal + " WT: " + priority.finishProcesses.get(i).wt + " TT: " + (priority.finishProcesses.get(i).processTime + priority.finishProcesses.get(i).wt));
+      }
     } else {
       rr = new Round_Robin(quantum);
 
@@ -111,9 +114,10 @@ public class SO {
           this.rr.currProc.tempoRestante++;
         }
       }
-
+      for(int i = 0; i < rr.finishProcesses.size(); i++) {
+        System.out.println("PID: " + rr.finishProcesses.get(i).getPID() + "-" + "Processing Time: " + rr.finishProcesses.get(i).tempoDeExecucaoTotal + " WT: " + rr.finishProcesses.get(i).wt + " TT: " + (rr.finishProcesses.get(i).processTime + rr.finishProcesses.get(i).wt));
+      }
     }
-
   }
 
   private void sendProcsTopPriority() {

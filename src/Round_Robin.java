@@ -31,6 +31,7 @@ public class Round_Robin extends Scheduler {
         newProcesses.get(cont).setState("Ready");
         System.out.println("[ID." + newProcesses.get(cont).getPID() + "]" +
             " entrou no ready : " + " ciclo atual ---> " + cicloAtual);
+            newProcesses.get(cont).enterReady = cicloAtual;
         cont = 0;
         newProcesses.remove(cont);
       } else {
@@ -45,6 +46,7 @@ public class Round_Robin extends Scheduler {
     currProc.startExecutingTime = cicloAtual;
     cpu.setProcessinProcessor(currProc); // currProc vai usar cpu
     currProc.setState("Running");
+    currProc.wt += (cicloAtual - currProc.enterReady);
     readyProcesses.remove(0);
     System.out.println("[ID." + currProc.getPID() + "]" + " entrou no running :" + " ciclo atual ---> " + cicloAtual);
   }
@@ -71,6 +73,7 @@ public class Round_Robin extends Scheduler {
       System.out.println("[ID." + currProc.getPID() + "]" + " saiu e entrou no ready :" + " ciclo atual ---> "
           + currProc.stopExecutingTime);
       readyProcesses.add(currProc);
+      currProc.enterReady = cicloAtual;
       currProc = null;
 
     } else {
